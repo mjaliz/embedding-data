@@ -1,0 +1,14 @@
+[project]
+name = "embedding-data"
+version = "0.1.0"
+description = "Add your description here"
+readme = "README.md"
+requires-python = ">=3.12"
+dependencies = [
+    "asyncpg>=0.30.0",
+    "greenlet>=3.2.4",
+    "loguru>=0.7.3",
+    "pydantic-settings>=2.10.1",
+    "pymilvus>=2.6.2",
+    "sqlmodel>=0.0.25",
+]
