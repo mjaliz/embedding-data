@@ -10,5 +10,6 @@ dependencies = [
     "loguru>=0.7.3",
     "pydantic-settings>=2.10.1",
     "pymilvus>=2.6.2",
+    "sentence-transformers>=5.1.0",
     "sqlmodel>=0.0.25",
 ]

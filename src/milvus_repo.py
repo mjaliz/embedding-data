@@ -27,6 +27,37 @@ class MilvusRepo:
         res = self.client.insert(collection_name=collection_name, data=data)
         return res
 
+    def search(
+        self,
+        collection_name: str,
+        query_vector: list[float],
+        limit: int = 10,
+        output_fields: list[str] = None,
+    ):
+        """
+        Search for similar vectors in the collection
+
+        Args:
+            collection_name: Name of the collection to search in
+            query_vector: The query vector to search for
+            limit: Number of results to return
+            output_fields: Fields to include in the output
+
+        Returns:
+            Search results from Milvus
+        """
+        search_params = {"metric_type": "COSINE", "params": {"nprobe": 10}}
+
+        results = self.client.search(
+            collection_name=collection_name,
+            data=[query_vector],
+            anns_field="vector",
+            search_params=search_params,
+            limit=limit,
+            output_fields=output_fields or [],
+        )
+        return results
+
 
 if __name__ == "__main__":
     client = MilvusRepo(uri=config.MILVUS_URI, token=config.MILVUS_TOKEN)
