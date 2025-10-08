@@ -73,3 +73,42 @@ class PostgresRepo:
         """
         result = await self.session.exec(select(Query).where(Query.id == query_id))
         return result.first()
+
+    async def update_query_candidates(
+        self,
+        query_id: int,
+        bge_m3_candidates: list[str] | None = None,
+        xml_candidates: list[str] | None = None,
+        has_bge_m3_candidate: bool | None = None,
+        has_xml_candidate: bool | None = None,
+    ) -> Query | None:
+        """
+        Update query candidates and their flags
+
+        Args:
+            query_id: The ID of the query to update
+            bge_m3_candidates: List of BGE M3 candidate strings
+            xml_candidates: List of XML candidate strings
+            has_bge_m3_candidate: Flag to indicate if BGE M3 candidates are set
+            has_xml_candidate: Flag to indicate if XML candidates are set
+
+        Returns:
+            Updated Query object if found, None otherwise
+        """
+        query = await self.get_query_by_id(query_id)
+        if not query:
+            return None
+
+        if bge_m3_candidates is not None:
+            query.bge_m3_candidates = bge_m3_candidates
+        if xml_candidates is not None:
+            query.xml_candidates = xml_candidates
+        if has_bge_m3_candidate is not None:
+            query.has_bge_m3_candidate = has_bge_m3_candidate
+        if has_xml_candidate is not None:
+            query.has_xml_candidate = has_xml_candidate
+
+        self.session.add(query)
+        await self.session.commit()
+        await self.session.refresh(query)
+        return query

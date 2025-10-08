@@ -162,6 +162,22 @@ async def fetch_and_search_queries(
                 )
                 results.append(search_result)
 
+                # Extract candidate queries from search results
+                bge_m3_candidates = [result.query for result in search_result.results]
+
+                # Update the query with candidates and set the flag
+                async with get_async_session_context() as session:
+                    postgres_repo = PostgresRepo(session)
+                    await postgres_repo.update_query_candidates(
+                        query_id=query.id,
+                        bge_m3_candidates=bge_m3_candidates,
+                        has_bge_m3_candidate=True,
+                    )
+
+                logger.info(
+                    f"Updated query {query.id} with {len(bge_m3_candidates)} BGE M3 candidates"
+                )
+
             except Exception as e:
                 logger.error(f"Error searching for query ID {query.id}: {str(e)}")
                 # Continue with the next query instead of failing completely
