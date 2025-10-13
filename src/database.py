@@ -1,3 +1,4 @@
+import json
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
 
@@ -9,7 +10,19 @@ from sqlmodel.ext.asyncio.session import AsyncSession
 
 from src.config import config
 
-engine = AsyncEngine(create_engine(str(config.POSTGRES_URL), echo=False, future=True))
+
+def json_serializer(obj):
+    return json.dumps(obj, ensure_ascii=False)
+
+
+engine = AsyncEngine(
+    create_engine(
+        url=str(config.POSTGRES_URL),
+        echo=False,
+        future=True,
+        json_serializer=json_serializer,
+    )
+)
 
 
 async def init_db():

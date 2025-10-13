@@ -114,8 +114,8 @@ async def search_queries_from_db(
 
 async def fetch_and_search_queries(
     db_limit: int = 1000,
-    search_limit: int = 10,
-    score_threshold: float = 0.5,
+    search_limit: int = 100,
+    score_threshold: float = 0.6,
 ) -> list[SearchResponse]:
     """
     Fetches queries from DB where has_bge_m3_candidate is False and performs search for each one
@@ -218,5 +218,33 @@ if __name__ == "__main__":
         except Exception as e:
             logger.error(f"Test failed: {str(e)}")
 
-    # Run the test
-    asyncio.run(fetch_and_search_queries())
+    async def run_batch_processing():
+        """Run fetch_and_search_queries in a loop until no more data to process"""
+        batch_number = 0
+
+        while True:
+            batch_number += 1
+            logger.info(f"Starting batch {batch_number}...")
+
+            try:
+                results = await fetch_and_search_queries(
+                    db_limit=1000, search_limit=100, score_threshold=0.6
+                )
+
+                if not results:
+                    logger.info(
+                        "No more queries to process. Batch processing complete."
+                    )
+                    break
+
+                logger.info(
+                    f"Batch {batch_number} completed: processed {len(results)} queries"
+                )
+
+            except Exception as e:
+                logger.error(f"Error in batch {batch_number}: {str(e)}")
+                logger.info("Stopping batch processing due to error")
+                break
+
+    # Run the batch processing
+    asyncio.run(run_batch_processing())
