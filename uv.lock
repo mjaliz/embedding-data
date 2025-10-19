@@ -96,11 +96,25 @@ wheels = [
 ]
 
 [[package]]
+name = "elasticsearch"
+version = "7.17.2"
+source = { registry = "https://pypi.org/simple" }
+dependencies = [
+    { name = "certifi" },
+    { name = "urllib3" },
+]
+sdist = { url = "https://files.pythonhosted.org/packages/80/f8/43d9883ef93dea53735f4df4a46a6f21a8a65fb0f4d5c85f625e5cea0d20/elasticsearch-7.17.2.tar.gz", hash = "sha256:1b1fa86cbfab39bf43dce1f76f737fc59d5a8e792e2a721e0b4437db44da5647", size = 247730 }
+wheels = [
+    { url = "https://files.pythonhosted.org/packages/4a/e5/ba6af6d8bbf90abb4114c90fb7a9e19f15b38c31818f56443d6ff4a80615/elasticsearch-7.17.2-py2.py3-none-any.whl", hash = "sha256:f49ebaf9e9652a468db4dce5eb8a6a7ea33594ab988f6dadebf36f99772ac809", size = 385788 },
+]
+
+[[package]]
 name = "embedding-data"
 version = "0.1.0"
 source = { virtual = "." }
 dependencies = [
     { name = "asyncpg" },
+    { name = "elasticsearch" },
     { name = "greenlet" },
     { name = "loguru" },
     { name = "pydantic-settings" },
@@ -112,6 +126,7 @@ dependencies = [
 [package.metadata]
 requires-dist = [
     { name = "asyncpg", specifier = ">=0.30.0" },
+    { name = "elasticsearch", specifier = "==7.17.2" },
     { name = "greenlet", specifier = ">=3.2.4" },
     { name = "loguru", specifier = ">=0.7.3" },
     { name = "pydantic-settings", specifier = ">=2.10.1" },
@@ -1299,11 +1314,11 @@ wheels = [
 
 [[package]]
 name = "urllib3"
-version = "2.5.0"
+version = "1.26.20"
 source = { registry = "https://pypi.org/simple" }
-sdist = { url = "https://files.pythonhosted.org/packages/15/22/9ee70a2574a4f4599c47dd506532914ce044817c7752a79b6a51286319bc/urllib3-2.5.0.tar.gz", hash = "sha256:3fc47733c7e419d4bc3f6b3dc2b4f890bb743906a30d56ba4a5bfa4bbff92760", size = 393185 }
+sdist = { url = "https://files.pythonhosted.org/packages/e4/e8/6ff5e6bc22095cfc59b6ea711b687e2b7ed4bdb373f7eeec370a97d7392f/urllib3-1.26.20.tar.gz", hash = "sha256:40c2dc0c681e47eb8f90e7e27bf6ff7df2e677421fd46756da1161c39ca70d32", size = 307380 }
 wheels = [
-    { url = "https://files.pythonhosted.org/packages/a7/c2/fe1e52489ae3122415c51f387e221dd0773709bad6c6cdaa599e8a2c5185/urllib3-2.5.0-py3-none-any.whl", hash = "sha256:e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc", size = 129795 },
+    { url = "https://files.pythonhosted.org/packages/33/cf/8435d5a7159e2a9c83a95896ed596f68cf798005fe107cc655b5c5c14704/urllib3-1.26.20-py2.py3-none-any.whl", hash = "sha256:0ed14ccfbf1c30a9072c7ca157e4319b70d65f623e91e7b32fadb2853431016e", size = 144225 },
 ]
 
 [[package]]

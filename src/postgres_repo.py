@@ -158,3 +158,68 @@ class PostgresRepo:
             await self.session.refresh(query)
 
         return updated_queries
+
+    async def get_queries_without_elastic_candidate(
+        self, offset: int = 0, limit: int = 100
+    ) -> list[Query]:
+        """
+        Fetch queries that don't have elastic candidate flag set
+
+        Args:
+            offset: Number of records to skip
+            limit: Maximum number of records to return
+
+        Returns:
+            List of Query objects that have has_elastic_candidate as False
+        """
+        result = await self.session.exec(
+            select(Query)
+            .where(Query.has_elastic_candidate == False)
+            .offset(offset)
+            .limit(limit)
+        )
+        return result.all()
+
+    async def get_query_by_keyword(self, keyword: str) -> Query | None:
+        """
+        Fetch a query by its keyword (exact match)
+
+        Args:
+            keyword: The keyword to search for
+
+        Returns:
+            Query object if found, None otherwise
+        """
+        result = await self.session.exec(select(Query).where(Query.query == keyword))
+        return result.first()
+
+    async def update_query_elastic_candidates(
+        self,
+        query_id: int,
+        elastic_candidates: list[str] | None = None,
+        has_elastic_candidate: bool | None = None,
+    ) -> Query | None:
+        """
+        Update query elastic candidates and their flags
+
+        Args:
+            query_id: The ID of the query to update
+            elastic_candidates: List of elastic candidate strings
+            has_elastic_candidate: Flag to indicate if elastic candidates are set
+
+        Returns:
+            Updated Query object if found, None otherwise
+        """
+        query = await self.get_query_by_id(query_id)
+        if not query:
+            return None
+
+        if elastic_candidates is not None:
+            query.elastic_candidates = elastic_candidates
+        if has_elastic_candidate is not None:
+            query.has_elastic_candidate = has_elastic_candidate
+
+        self.session.add(query)
+        await self.session.commit()
+        await self.session.refresh(query)
+        return query

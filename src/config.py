@@ -16,5 +16,9 @@ class Config(BaseSettings):
     POSTGRES_HOST: str
     POSTGRES_URL: str
 
+    ELASTIC_STAGE_HOST_URL: str = "https://stage-elastic.bs0.basalam.dev:443"
+    ELASTIC_STAGE_INDEX_NAME: str = "search_queries"
+    EMBEDDING_URL: str = "http://185.13.230.203:8002/serach/vector_search"
+
 
 config = Config()

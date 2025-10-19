@@ -13,6 +13,10 @@ class Query(SQLModel, table=True):
     has_bge_m3_candidate: bool = Field(default=False)
     has_xml_embedding: bool = Field(default=False)
     has_xml_candidate: bool = Field(default=False)
+    has_elastic_candidate: bool = Field(default=False)
+    elastic_candidates: list[str] = Field(
+        default_factory=list, sa_column=Column(JSON, nullable=False)
+    )
     created_at: datetime = Field(
         default=datetime.now(timezone.utc), sa_type=DateTime(timezone=True)
     )
