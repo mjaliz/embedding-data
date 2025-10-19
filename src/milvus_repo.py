@@ -58,6 +58,40 @@ class MilvusRepo:
         )
         return results
 
+    def batch_search(
+        self,
+        collection_name: str,
+        query_vectors: list[list[float]],
+        limit: int = 10,
+        output_fields: list[str] = None,
+    ):
+        """
+        Search for multiple similar vectors in the collection in a single batch operation
+
+        Args:
+            collection_name: Name of the collection to search in
+            query_vectors: List of query vectors to search for
+            limit: Number of results to return for each query
+            output_fields: Fields to include in the output
+
+        Returns:
+            Search results from Milvus (one result set per query vector)
+        """
+        if not query_vectors:
+            return []
+
+        search_params = {"metric_type": "COSINE", "params": {"nprobe": 10}}
+
+        results = self.client.search(
+            collection_name=collection_name,
+            data=query_vectors,
+            anns_field="vector",
+            search_params=search_params,
+            limit=limit,
+            output_fields=output_fields or [],
+        )
+        return results
+
 
 if __name__ == "__main__":
     client = MilvusRepo(uri=config.MILVUS_URI, token=config.MILVUS_TOKEN)

@@ -112,3 +112,49 @@ class PostgresRepo:
         await self.session.commit()
         await self.session.refresh(query)
         return query
+
+    async def batch_update_query_candidates(
+        self,
+        updates: list[dict],
+    ) -> list[Query]:
+        """
+        Batch update multiple queries with their candidates and flags
+
+        Args:
+            updates: List of dicts containing:
+                - query_id: The ID of the query to update
+                - bge_m3_candidates: Optional list of BGE M3 candidate strings
+                - xml_candidates: Optional list of XML candidate strings
+                - has_bge_m3_candidate: Optional flag for BGE M3 candidates
+                - has_xml_candidate: Optional flag for XML candidates
+
+        Returns:
+            List of updated Query objects
+        """
+        updated_queries = []
+
+        for update in updates:
+            query_id = update.get("query_id")
+            query = await self.get_query_by_id(query_id)
+
+            if not query:
+                continue
+
+            if "bge_m3_candidates" in update:
+                query.bge_m3_candidates = update["bge_m3_candidates"]
+            if "xml_candidates" in update:
+                query.xml_candidates = update["xml_candidates"]
+            if "has_bge_m3_candidate" in update:
+                query.has_bge_m3_candidate = update["has_bge_m3_candidate"]
+            if "has_xml_candidate" in update:
+                query.has_xml_candidate = update["has_xml_candidate"]
+
+            self.session.add(query)
+            updated_queries.append(query)
+
+        await self.session.commit()
+
+        for query in updated_queries:
+            await self.session.refresh(query)
+
+        return updated_queries
